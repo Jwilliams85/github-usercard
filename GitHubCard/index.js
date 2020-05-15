@@ -1,4 +1,4 @@
-//import { imgSrcToBlob } from "blob-util";
+
 
 /*
   STEP 1: using axios, send a GET request to the following URL
@@ -6,17 +6,27 @@
     https://api.github.com/users/<your name>
 */
 
+const followersArray = [];
 
-axios.get('https://api.github.com/users/JWilliams85')
-.then(response => {
-  const entryPoint = document.querySelector ('.cards')
-  entryPoint.appendChild(gitCard(response.data))
-})
+const entryPoint = document.querySelector ('.cards')
+axios.get('https://api.github.com/users/Jwilliams85')
+.then(response => { 
+  const myCard = response.data
+  console.log(response)
+  entryPoint.appendChild(gitCard(myCard));
 
+  axios.get(response.data.followers_url)
+  .then(response1 => {
+    console.log(response1);
+    response1.data.forEach(follower => {
+      document.querySelector('.cards').appendChild(gitCard(follower));
+    });
+  })
 
 .catch(err => {
   console.log ('something happened!');
  
+})
 })
 
 /*
@@ -52,13 +62,6 @@ axios.get('https://api.github.com/users/JWilliams85')
 */
 
 
-const followersArray = [];
-// followers.appendChild(followersArray[0])
-// followers.appendChild(followersArray[1])
-// followers.appendChild(followersArray[2])
-// followers.appendChild(followersArray[3])
-// followers.appendChild(followersArray[4])
-
 /*
 
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -92,12 +95,14 @@ const gitCard = (user) => {
     const followers = document.createElement ('p');
     const following = document.createElement ('p');
     const bio = document.createElement ('p');
+    const button = document.createElement ('span')
 
 
 card.classList.add ('card');
 cardInfo.classList.add ('card-info');
 name.classList.add ('name');
 userName.classList.add ('username');
+button.classList.add ('expandButton')
 
 name.textContent = user.name;
 image.src = user.avatar_url;
@@ -108,6 +113,7 @@ profileAnchor.textContent = user.html_url;
 followers.textContent = `Followers: ${user.followers}`;
 following.textContent = `Following: ${user.following}`;
 bio.textContent = `Bio ${user.bio}`;
+button.textContent = 'Expand'
 
 
 
@@ -120,9 +126,11 @@ cardInfo.appendChild(profile)
 cardInfo.appendChild(followers)
 cardInfo.appendChild(following)
 cardInfo.appendChild(bio)
+card.appendChild(button)
 
-card.addEventListener('click', () => {
-  card.classList.toggle('cardInfo')
+
+button.addEventListener('click', () => {
+  card.classList.toggle('card-open')
 })
 
 return card
