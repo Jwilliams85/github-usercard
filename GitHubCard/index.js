@@ -1,4 +1,4 @@
-import { imgSrcToBlob } from "blob-util";
+//import { imgSrcToBlob } from "blob-util";
 
 /*
   STEP 1: using axios, send a GET request to the following URL
@@ -8,20 +8,11 @@ import { imgSrcToBlob } from "blob-util";
 
 
 axios.get('https://api.github.com/users/JWilliams85')
-.then(obj => {
-  let otherFollowers = obj.data;
-  return otherFollowers;
-})
-
-.then (array => array.map(user => {
-  let profileURL = `http://api.github.com/user/${user.login}`
-  axios.get(profileURL)
-
 .then(response => {
   const entryPoint = document.querySelector ('.cards')
   entryPoint.appendChild(gitCard(response.data))
 })
-}))
+
 
 .catch(err => {
   console.log ('something happened!');
@@ -88,7 +79,7 @@ const followersArray = [];
       </div>
     </div>
 */
-const gitCard = () => {
+const gitCard = (user) => {
 
     const card = document.createElement ('div');
     const image = document.createElement ('img')
